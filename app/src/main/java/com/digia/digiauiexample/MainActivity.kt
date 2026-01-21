@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -16,38 +17,43 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.digia.digiaui.app.DigiaUIApp
 import com.digia.digiaui.framework.DUIFactory
-
-import com.digia.digiauiexample.ui.theme.DigiaUIExampleTheme
+import com.digia.digiaui.framework.message.MessageBus
 import com.digia.digiaui.init.DigiaUI
 import com.digia.digiaui.init.DigiaUIOptions
 import com.digia.digiaui.init.Flavor
+//import com.digia.digiaui.framework.message.ObserveMessages
+import com.digia.digiaui.utils.DeveloperConfig
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            DigiaUIExampleTheme {
+
                 val appConfigState = remember { mutableStateOf<DigiaUI?>(null) }
                 if (appConfigState.value != null) {
                     DigiaUIApp(
                         digiaUI = appConfigState.value!!,
 
                         content = {
-                            Scaffold(modifier = Modifier.fillMaxSize()) {
-                                innerPadding ->
-                                Greeting(
-                                    name = "Digia UI Initialized",
-                                    modifier = Modifier.padding(innerPadding)
-                                )
-                                DUIFactory.getInstance().CreateInitialPage()
-                            }
+//
+//                            ObserveMessages( "Test1") { message ->
+//                                println("vdfvfdvfd")
+//                            }
+
+//                            Scaffold(modifier = Modifier.fillMaxSize()) { paddingValues ->
+//                               Box (modifier = Modifier.padding(paddingValues).fillMaxSize()){
+                                   DUIFactory.getInstance().CreateNavHost()
+//                               }
+//
+//                            }
                         }
                     )
                 } else {
                     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                        Greeting(
-                            name = "Loading...",
+                        Text(
+                             "Loading...",
                             modifier = Modifier.padding(innerPadding)
                         )
                     }
@@ -57,8 +63,12 @@ class MainActivity : ComponentActivity() {
                         val appConfig = DigiaUI.initialize(options = DigiaUIOptions(
                             context = this@MainActivity,
                             flavor = Flavor.Debug(),
-                            accessKey = "69538d36c16b125c10d2b296"  // Replace with actual access key
-                        ))
+//                            developerConfig = DeveloperConfig(
+//                                baseUrl = "https://app.digia.tech/api/v1"
+//                            ),
+                            accessKey = "696782d80fbc2647373ff8b7"  // Replace with actual access key
+                        )
+                        )
                         appConfigState.value = appConfig
                     } catch (e: Exception) {
                         appConfigState.value = null
@@ -66,21 +76,5 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    DigiaUIExampleTheme {
-        Greeting("Android")
-    }
-}
